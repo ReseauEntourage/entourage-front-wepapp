@@ -13,7 +13,6 @@ const selectEntourageMapDomain = () => (state) => state.get('entourageMap');
 /**
  * Default selector used by EntourageMap
  */
-
 const makeSelectEntourageMap = () => createSelector(
   selectEntourageMapDomain(),
   (substate) => substate.toJS()

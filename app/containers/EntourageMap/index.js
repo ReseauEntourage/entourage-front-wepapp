@@ -50,14 +50,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-// export default connect((state, props) => ({
-//   overed: state.overedMarkerId === props.id,
-//   overedGroup: props.groupId && state.overedGroupId === props.groupId,
-//   active: state.activeMarkerId === props.id || state.newMarkerId === props.id,
-//   disableAutoPan: state.newMarkerId === props.id,
-// }), {
-//   setOverMarker,
-//   setActiveMarker,
-// })(EntourageMap);
-
 export default connect(mapStateToProps, mapDispatchToProps)(EntourageMap);

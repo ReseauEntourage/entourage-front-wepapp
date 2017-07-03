@@ -58,6 +58,8 @@ const Markers = ({markers}) => (
         onMouseOver={() => console.log("ok")}
       />
     ))}
+
+
   </MarkerClusterer>
 );
 
