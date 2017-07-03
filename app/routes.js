@@ -19,15 +19,17 @@ export default function createRoutes(store) {
   return [
     {
       path: '/',
-      name: 'home',
+      name: 'entourageMap',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/HomePage'),
+          import('containers/EntourageMap/reducer'),
+          import('containers/EntourageMap'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([component]) => {
+        importModules.then(([reducer, component]) => {
+          injectReducer('entourageMap', reducer.default);
           renderRoute(component);
         });
 
