@@ -1,5 +1,9 @@
-3. Run `npm install` in order to install dependencies.<br />
+[demo](https://build-kjqyhgkzyz.now.sh)
+
+1. Run `npm install` in order to install dependencies.<br />
    *At this point you can run `npm start` to see the example app at `http://localhost:3000`.*
+
+2. Run `npm run build` this will generate a build dir that you can upload to any static web host.<br />
 
 ## Documentation
 

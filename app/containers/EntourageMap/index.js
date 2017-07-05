@@ -9,45 +9,56 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import 'whatwg-fetch';
 import csv from 'csv';
-import makeSelectEntourageMap from './selectors';
+import { makeSelectDataPoints } from './selectors';
+import { setDataAction, setMapCenter } from './actions';
 import GoogleMap from './Map/GoogleMap';
 
+const geolocation = (
+  window && navigator.geolocation ?
+  navigator.geolocation :
+  ({
+    getCurrentPosition(success, failure) {
+      failure(`Your browser doesn't support geolocation.`);
+    },
+  })
+);
 
 export class EntourageMap extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
-  state = {
-    dataPoints: [],
-  }
-
   componentDidMount() {
-    fetch('http://localhost:1337/entourage-landingpages-preprod.herokuapp.com/assets/downloads/entourages.csv')
+    fetch('/entourages.csv')
     .then((response) => response.text())
     .then((text) => csv.parse(text, { columns: true }, (err, data) => {
-      this.setState({ dataPoints: data });
+      this.props.setDataAction(data);
     }));
+
+
+    // geolocation
+    geolocation.getCurrentPosition(position => {
+      this.props.setMapCenter({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      });
+    });
   }
 
   render() {
     return (
       <div>
-        <GoogleMap dataPoints={this.state.dataPoints} />
+        <GoogleMap dataPoints={this.props.dataPoints} />
       </div>
     );
   }
 }
 
 EntourageMap.propTypes = {
-  dispatch: PropTypes.func.isRequired,
+  setDataAction: PropTypes.func.isRequired,
+  setMapCenter: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = createStructuredSelector({
-  EntourageMap: makeSelectEntourageMap(),
-});
-
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(EntourageMap);
+export default connect(
+  createStructuredSelector({
+    dataPoints: makeSelectDataPoints(),
+  }),
+  { setDataAction, setMapCenter }
+)(EntourageMap);

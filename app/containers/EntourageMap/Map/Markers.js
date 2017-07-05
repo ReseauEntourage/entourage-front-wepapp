@@ -5,8 +5,11 @@
  */
 
 import React, { PropTypes } from 'react';
-import { Marker } from 'react-google-maps';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { makeSelectMarkers, getInBoundsMarkers } from '../selectors';
 import MarkerClusterer from "react-google-maps/lib/addons/MarkerClusterer";
+import Marker from './Marker';
 
 
 const css = `
@@ -21,7 +24,7 @@ const css = `
   	to {
   		transform: scale(0.7);
   		-webkit-transform: scale(0.7);
-      opacity: 0.75;
+      opacity: 0.85;
   	}
   }
 
@@ -29,38 +32,40 @@ const css = `
   	to {
   		transform: scale(0.7);
   		-webkit-transform: scale(0.7);
-      opacity: 0.75;
+      opacity: 0.85;
   	}
   }
 `;
 
-const Markers = ({markers}) => (
+const Markers = ({markers, setOveredPointId}) => (
   <MarkerClusterer
     averageCenter
     enableRetinaIcons
     gridSize={120}
-    maxZoom={10}
-    minimumClusterSize={10}
+    // maxZoom={10}
+    minimumClusterSize={50}
   >
     <style>{css}</style>
-    {markers.map(({id, Longitude, Latitude, ...marker}) => (
+    {markers.map(marker => (
       <Marker
-        position={{lat: Number(Latitude), lng:Number(Longitude)}}
-        icon={{
-          url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Heart_corazón.svg/169px-Heart_corazón.svg.png',
-          size: new google.maps.Size(30, 30),
-          scaledSize: new google.maps.Size(30, 30),
-          origin: new google.maps.Point(0,0)
-        }}
-        options={{optimized:false}}
-        key={id}
+        key={marker.id}
         {...marker}
-        onMouseOver={() => console.log("ok")}
       />
     ))}
-
-
   </MarkerClusterer>
 );
 
-export default Markers;
+Markers.propTypes = {
+};
+
+const mapStateToProps = (state) => ({
+  markers: makeSelectMarkers(state)
+});
+// const mapStateToProps = (state) => ({
+//   markers: getInBoundsMarkers(state)
+// });
+
+export default connect(
+  mapStateToProps,
+  {  }
+)(Markers);
