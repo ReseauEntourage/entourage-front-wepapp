@@ -79,12 +79,13 @@ const OveredBox = ({ title }) => (
 
 const InfoBox = ({ position, isClicked, ...props }) => (
   <InfoWindow
-    style={{ backgroundColor: 'blue' }}
     position={position}
     options={{ disableAutoPan: false }}
     onCloseClick={() => props.setOveredPointId(null)}
   >
-    {isClicked ? <ClickedBox {...props} /> : <OveredBox {...props} />}
+    <div style={{ maxWidth: 300 }}>
+      {isClicked ? <ClickedBox {...props} /> : <OveredBox {...props} />}
+    </div>
   </InfoWindow>
 );
 
