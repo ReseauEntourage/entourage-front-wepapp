@@ -10,6 +10,7 @@ import {
   SET_CLICKED_POINT_ID,
   SET_MAP_BOUNDS,
   SET_MAP_CENTER,
+  SET_FILTER,
 } from './constants';
 
 const initialState = {
@@ -18,6 +19,7 @@ const initialState = {
   clickedPointId: null,
   mapBounds: null,
   mapCenter: { lat: 48.8547942, lng: 2.3482701 },
+  filter: '',
 };
 
 function entourageMapReducer(state = initialState, action) {
@@ -42,6 +44,8 @@ function entourageMapReducer(state = initialState, action) {
       return { ...state, mapBounds: action.payload };
     case SET_MAP_CENTER:
       return { ...state, mapCenter: action.payload };
+    case SET_FILTER:
+      return { ...state, filter: action.payload };
     default:
       return state;
   }

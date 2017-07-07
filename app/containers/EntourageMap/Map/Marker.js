@@ -26,6 +26,7 @@ const Marker = ({ id, isOvered, isClicked, ...props }) => {
       {(data) => (
         /* eslint jsx-a11y/mouse-events-have-key-events: 0 */
         <GoogleMarker
+          noRedraw
           position={props.position}
           icon={{
             anchor: new window.google.maps.Point(data.iconSize / 2, data.iconSize / 2),

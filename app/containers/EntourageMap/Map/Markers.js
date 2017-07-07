@@ -16,7 +16,6 @@ const Markers = ({ markers }) => (
     averageCenter
     enableRetinaIcons
     gridSize={120}
-    // maxZoom={10}
     minimumClusterSize={50}
   >
     {markers.map((marker) => (

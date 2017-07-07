@@ -13,6 +13,7 @@ const isMarkerInCurrentMapBound = (state, props) => !getBounds(state) || getBoun
 export const getOveredPointId = (state) => state.get('entourageMap').overedPointId;
 export const getMapCenter = (state) => state.get('entourageMap').mapCenter;
 const getMarkers = (state) => state.get('entourageMap').dataPoints;
+const getFilter = (state) => state.get('entourageMap').filter;
 const getBounds = (state) => state.get('entourageMap').mapBounds;
 
 /**
@@ -27,10 +28,6 @@ const makeSelectEntourageMap = () => createSelector(
   selectEntourageMapDomain,
   (substate) => substate
 );
-export const makeSelectDataPoints = () => createSelector(
-  selectDataPoints,
-  (substate) => Object.values(substate)
-);
 export const makeSelectIsOvered = () => createSelector(
   isOveredPointId,
   (substate) => substate
@@ -44,8 +41,14 @@ export const makeSelectMarkerIsInBound = () => createSelector(
   (substate) => substate
 );
 export const makeSelectMarkers = createSelector(
-  getMarkers,
-  (substate) => Object.values(substate)
+  [getMarkers, getFilter],
+  (markers, filter) => Object.values(markers)
+    .filter((marker) => (
+      filter.trim() === ''
+      || marker.first_name.toLowerCase().includes(filter.toLowerCase())
+      || marker.title.toLowerCase().includes(filter.toLowerCase())
+      || marker.description.toLowerCase().includes(filter.toLowerCase())
+    ))
 );
 
 export const getInBoundsMarkers = createSelector(

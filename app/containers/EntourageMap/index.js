@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import 'whatwg-fetch';
 import csv from 'csv';
-import { makeSelectDataPoints } from './selectors';
 import { setDataAction, setMapCenter } from './actions';
 import GoogleMap from './Map/GoogleMap';
 
@@ -44,7 +43,7 @@ export class EntourageMap extends React.PureComponent { // eslint-disable-line r
   render() {
     return (
       <div>
-        <GoogleMap dataPoints={this.props.dataPoints} />
+        <GoogleMap />
       </div>
     );
   }
@@ -56,8 +55,6 @@ EntourageMap.propTypes = {
 };
 
 export default connect(
-  createStructuredSelector({
-    dataPoints: makeSelectDataPoints(),
-  }),
+  () => ({}),
   { setDataAction, setMapCenter }
 )(EntourageMap);

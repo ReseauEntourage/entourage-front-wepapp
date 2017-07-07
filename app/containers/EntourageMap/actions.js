@@ -10,6 +10,7 @@ import {
   SET_CLICKED_POINT_ID,
   SET_MAP_BOUNDS,
   SET_MAP_CENTER,
+  SET_FILTER,
 } from './constants';
 
 export const setDataAction = (data) => ({
@@ -31,4 +32,8 @@ export const setMapBounds = (mapBounds) => ({
 export const setMapCenter = (position) => ({
   type: SET_MAP_CENTER,
   payload: position,
+});
+export const setFilter = (filter) => ({
+  type: SET_FILTER,
+  payload: filter,
 });

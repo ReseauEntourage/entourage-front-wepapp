@@ -7,15 +7,22 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { makeSelectMarkers } from '../selectors';
 import InfoListItem from './InfoListItem';
+import FilterBox from './FilterBox';
 
 const baseStyle = {
   backgroundColor: 'white',
   overflow: 'auto',
 };
 
+const filterBoxStyle = {
+  padding: 5,
+};
 
 const InfoList = ({ style, markers }) => (
   <div style={{ ...baseStyle, ...style }}>
+    <div style={filterBoxStyle}>
+      <FilterBox />
+    </div>
     {
         markers.map((marker) => (
           <InfoListItem
