@@ -4,7 +4,6 @@
  *
  */
 
-import { fromJS } from 'immutable';
 import {
   SET_DATA,
   SET_OVERED_POINT_ID,
@@ -18,7 +17,7 @@ const initialState = {
   overedPointId: null,
   clickedPointId: null,
   mapBounds: null,
-  mapCenter: { lat: 48.8547942, lng: 2.3482701 }
+  mapCenter: { lat: 48.8547942, lng: 2.3482701 },
 };
 
 function entourageMapReducer(state = initialState, action) {
@@ -26,22 +25,23 @@ function entourageMapReducer(state = initialState, action) {
     case SET_DATA:
       return {
         ...state,
-        dataPoints: action.payload.reduce( (acc, item) => {
+        dataPoints: action.payload.reduce((acc, item) => {
+          /* eslint no-param-reassign: 0*/
           acc[item.id] = {
             ...item,
-            position: {lat: Number(item.Latitude), lng:Number(item.Longitude)}
+            position: { lat: Number(item.Latitude), lng: Number(item.Longitude) },
           };
           return acc;
-        }, {})
+        }, {}),
       };
     case SET_OVERED_POINT_ID:
-      return { ...state, overedPointId: action.payload};
+      return { ...state, overedPointId: action.payload };
     case SET_CLICKED_POINT_ID:
-      return { ...state, clickedPointId: action.payload};
+      return { ...state, clickedPointId: action.payload };
     case SET_MAP_BOUNDS:
-      return { ...state, mapBounds: action.payload};
+      return { ...state, mapBounds: action.payload };
     case SET_MAP_CENTER:
-      return { ...state, mapCenter: action.payload};
+      return { ...state, mapCenter: action.payload };
     default:
       return state;
   }

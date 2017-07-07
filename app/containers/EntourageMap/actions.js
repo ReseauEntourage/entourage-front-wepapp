@@ -13,22 +13,22 @@ import {
 } from './constants';
 
 export const setDataAction = (data) => ({
-    type: SET_DATA,
-    payload: data
+  type: SET_DATA,
+  payload: data,
 });
 export const setOveredPointId = (pointId) => ({
   type: SET_OVERED_POINT_ID,
-  payload: pointId
+  payload: pointId,
 });
 export const setClickedPointId = (pointId) => ({
   type: SET_CLICKED_POINT_ID,
-  payload: pointId
+  payload: pointId,
 });
 export const setMapBounds = (mapBounds) => ({
   type: SET_MAP_BOUNDS,
-  payload: mapBounds
+  payload: mapBounds,
 });
 export const setMapCenter = (position) => ({
   type: SET_MAP_CENTER,
-  payload: position
+  payload: position,
 });

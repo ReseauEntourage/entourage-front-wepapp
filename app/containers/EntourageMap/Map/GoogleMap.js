@@ -3,33 +3,39 @@
  * GoogleMap - show google map for entourage data
  *
  */
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { withGoogleMap, GoogleMap } from 'react-google-maps';
 import withScriptjs from 'react-google-maps/lib/async/withScriptjs';
 import { connect } from 'react-redux';
-import Markers from './Markers';
-import InfoList from './InfoList';
-import { setMapBounds, setClickedPointId } from '../actions';
-import { getMapCenter } from '../selectors';
+import { debounce } from 'lodash';
 import {
   MAP,
-} from "react-google-maps/lib/constants";
+} from 'react-google-maps/lib/constants';
 import Responsive from 'react-responsive';
-import _ from 'lodash';
-
-const Default = ({ children }) => <Responsive minWidth={768} children={children} />;
-const Mobile = ({ children }) => <Responsive maxWidth={768} children={children} />;
+import Markers from './Markers';
+import InfoList from './InfoList';
+import TopBar from './TopBar';
+import { setMapBounds, setClickedPointId, setOveredPointId } from '../actions';
+import { getMapCenter } from '../selectors';
 
 let AsyncGoogleMap = withScriptjs(
   withGoogleMap(
-    ({ markers, map, onMapLoaded, mapCenterPosition, ...props }) => (
+    ({ map, onMapLoaded, mapCenterPosition, ...props }) => (
       <GoogleMap
         ref={onMapLoaded}
         defaultZoom={14}
         center={mapCenterPosition}
+        gestureHandling="greedy"
         // Notify list to refresh its content based on current map bounds visible markers
-        onBoundsChanged={_.debounce( () => props.setMapBounds(map.getBounds()), 1000)}
-        onClick={() => props.setClickedPointId(null)}
+        onBoundsChanged={debounce(() => props.setMapBounds(map.getBounds()), 100)}
+        onClick={() => {
+          props.setClickedPointId(null);
+          props.setOveredPointId(null);
+        }}
+        defaultOptions={{
+          streetViewControl: false,
+          mapTypeControl: false,
+        }}
       >
         <Markers />
       </GoogleMap>
@@ -39,64 +45,74 @@ let AsyncGoogleMap = withScriptjs(
 
 AsyncGoogleMap = connect(
   (state) => ({
-    mapCenterPosition: getMapCenter(state)
+    mapCenterPosition: getMapCenter(state),
   }),
-  { setMapBounds, setClickedPointId }
+  { setMapBounds, setClickedPointId, setOveredPointId }
 )(AsyncGoogleMap);
 
 
 export default class EntourageMap extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   state = {
-    map: null
+    map: null,
   };
 
   onMapLoaded = (map) => {
     if (map) {
       // Create a lawer and set it's id to enable animating marker css animations
-      const markersOverlay = new google.maps.OverlayView();
+      const markersOverlay = new window.google.maps.OverlayView();
       markersOverlay.draw = () => {
-        markersOverlay.getPanes().markerLayer.id='markerLayer';
+        markersOverlay.getPanes().markerLayer.id = 'markerLayer';
       };
       markersOverlay.setMap(map.context[MAP]);
-      this.setState({map});
+      this.setState({ map });
     }
   }
 
   render() {
     const infoListWidth = '20%';
+    const topBarHeight = '50px';
     const laodingComp = (
-      <div style={{ height: '100%' }}>
+      <div style={{ height: '100%', width: '100vw' }}>
         Chargement...
       </div>
     );
 
     // Dynamic container depending on device
-    const containerComp = desktop => (
+    const baseStyle = { height: `calc(${window.innerHeight}px - ${topBarHeight})`, userSelect: 'none' };
+    const containerComp = (desktop) => (
       desktop ?
-        <div style={{ width: `calc(100vw - ${infoListWidth})`, height: '100vh', userSelect: 'none' }} />
+        <div style={{ ...baseStyle, width: `calc(100vw - ${infoListWidth})` }} />
       :
-        <div style={{ width: '100vw', height: '100vh', userSelect: 'none' }} />
+        <div style={{ ...baseStyle, width: '100vw' }} />
     );
     const mapComp = (<div style={{ height: '100%' }} />);
 
     return (
-      <Responsive minDeviceWidth={768}>
-        {desktop => (
-          <div>
-            <AsyncGoogleMap
-              googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyDfyjrkHc0y1l4OzqfFV2noO2906f1RNuY"
-              loadingElement={laodingComp}
-              containerElement={containerComp(desktop)}
-              mapElement={mapComp}
-              markers={this.props.dataPoints}
-              map={this.state.map}
-              onMapLoaded={this.onMapLoaded}
-            />
-            {desktop && <InfoList width={infoListWidth} />}
-          </div>
-        )}
-      </Responsive>
+      <div>
+        <TopBar height={topBarHeight} map={this.state.map} />
+        <Responsive minDeviceWidth={768}>
+          {(desktop) => (
+            <div style={{ display: 'flex' }}>
+              <AsyncGoogleMap
+                googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyDfyjrkHc0y1l4OzqfFV2noO2906f1RNuY"
+                loadingElement={laodingComp}
+                containerElement={containerComp(desktop)}
+                mapElement={mapComp}
+                markers={this.props.dataPoints}
+                map={this.state.map}
+                onMapLoaded={this.onMapLoaded}
+              />
+              {desktop && <InfoList
+                style={{
+                  width: infoListWidth,
+                  height: `calc(100vh - ${topBarHeight})`,
+                }}
+              />}
+            </div>
+          )}
+        </Responsive>
+      </div>
     );
   }
 }

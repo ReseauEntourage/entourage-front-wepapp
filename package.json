@@ -24,7 +24,7 @@
     "build": "cross-env NODE_ENV=production webpack --config internals/webpack/webpack.prod.babel.js --color -p --progress",
     "build:clean": "npm run test:clean && rimraf ./build",
     "build:dll": "node ./internals/scripts/dependencies.js",
-    "deploy": "npm run build && now build --public",
+    "deploy": "npm run build && firebase deploy",
     "start": "cross-env NODE_ENV=development node server",
     "start:tunnel": "cross-env NODE_ENV=development ENABLE_TUNNEL=true node server",
     "start:production": "npm run test && npm run build && npm run start:prod",
@@ -144,6 +144,7 @@
       "prefer-template": 2,
       "class-methods-use-this": 0,
       "react/forbid-prop-types": 0,
+      "react/prop-types": [0, { "ignore": ["children"] }],
       "react/jsx-first-prop-new-line": [
         2,
         "multiline"
@@ -228,7 +229,9 @@
     "react-dom": "15.4.1",
     "react-google-maps": "^6.3.0",
     "react-helmet": "3.2.2",
+    "react-icons": "^2.2.5",
     "react-intl": "2.1.5",
+    "react-jss": "^7.0.0-pre.1",
     "react-list": "^0.8.6",
     "react-move": "^1.5.4",
     "react-redux": "4.4.6",

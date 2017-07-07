@@ -18,7 +18,7 @@ const geolocation = (
   navigator.geolocation :
   ({
     getCurrentPosition(success, failure) {
-      failure(`Your browser doesn't support geolocation.`);
+      failure('Your browser doesn\'t support geolocation.');
     },
   })
 );
@@ -32,9 +32,8 @@ export class EntourageMap extends React.PureComponent { // eslint-disable-line r
       this.props.setDataAction(data);
     }));
 
-
     // geolocation
-    geolocation.getCurrentPosition(position => {
+    geolocation.getCurrentPosition((position) => {
       this.props.setMapCenter({
         lat: position.coords.latitude,
         lng: position.coords.longitude,

@@ -3,12 +3,10 @@
  * InfoBox - represent window containing specific info on point
  *
  */
-
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import { setOveredPointId } from '../actions';
 import { InfoWindow } from 'react-google-maps';
+import { setOveredPointId } from '../actions';
 
 const styles = {
   title: {
@@ -32,7 +30,7 @@ const styles = {
     background: '#EF662F',
     padding: '8px 10px',
     fontSize: 'small',
-    textDecoration: 'none'
+    textDecoration: 'none',
   },
   from: {
     textAlign: 'right',
@@ -46,16 +44,16 @@ const styles = {
     textAlign: 'center',
     fontStyle: 'italic',
     color: '#EF662F',
-  }
+  },
 
-}
+};
 
 const formatDate = (date) => {
-  var dateObj = new Date(date);
-  return `${dateObj.getUTCDate()}/${dateObj.getUTCMonth() + 1}`; //months from 1-12
-}
+  const dateObj = new Date(date);
+  return `${dateObj.getUTCDate()}/${dateObj.getUTCMonth() + 1}`; // months from 1-12
+};
 
-const ClickedBox = ({ title, setOveredPointId, description, first_name, created_at }) =>  (
+const ClickedBox = ({ title, description, first_name, created_at }) => (
   <div>
     <h2 style={styles.title}>{title}</h2>
     <div style={styles.description}>{description}</div>
@@ -70,24 +68,24 @@ const ClickedBox = ({ title, setOveredPointId, description, first_name, created_
     </div>
   </div>
 );
-const OveredBox = ({ title }) =>  (
+const OveredBox = ({ title }) => (
   <div>
     <div>{title}</div>
     <div style={styles.info}>
-      clickez pour voir plus d'infos
+      clickez pour voir plus d&apos;infos
     </div>
   </div>
 );
 
-const InfoBox = ({ position, setOveredPointId, isClicked, ...markerData }) =>  (
-    <InfoWindow
-      style={{backgroundColor:"blue"}}
-      position={position}
-      options={{ disableAutoPan: false }}
-      onCloseClick={() => setOveredPointId(null)}
-    >
-      {isClicked ? <ClickedBox {...markerData} /> : <OveredBox {...markerData} />}
-    </InfoWindow>
+const InfoBox = ({ position, isClicked, ...props }) => (
+  <InfoWindow
+    style={{ backgroundColor: 'blue' }}
+    position={position}
+    options={{ disableAutoPan: false }}
+    onCloseClick={() => props.setOveredPointId(null)}
+  >
+    {isClicked ? <ClickedBox {...props} /> : <OveredBox {...props} />}
+  </InfoWindow>
 );
 
 InfoBox.propTypes = {
