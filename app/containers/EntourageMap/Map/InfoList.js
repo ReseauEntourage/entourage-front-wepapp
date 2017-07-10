@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
+import injectSheet from 'react-jss';
 import { makeSelectMarkers } from '../selectors';
 import InfoListItem from './InfoListItem';
 import FilterBox from './FilterBox';
@@ -18,12 +19,22 @@ const filterBoxStyle = {
   padding: 5,
 };
 
-const InfoList = ({ style, markers }) => (
+const styles = {
+  rows: {
+    '& tr:nth-child(even)': {
+      backgroundColor: '#F3F3F3',
+    },
+  },
+};
+
+const InfoList = ({ style, markers, classes }) => (
   <div style={{ ...baseStyle, ...style }}>
     <div style={filterBoxStyle}>
       <FilterBox />
     </div>
-    {
+    <table className={classes.rows}>
+      <tbody>
+        {
         markers.map((marker) => (
           <InfoListItem
             key={marker.id}
@@ -32,6 +43,8 @@ const InfoList = ({ style, markers }) => (
             marker={marker}
           />
         ))}
+      </tbody>
+    </table>
   </div>
   );
 
@@ -45,4 +58,4 @@ const mapStateToProps = (state) => ({
 export default connect(
   mapStateToProps,
   { }
-)(InfoList);
+)(injectSheet(styles)(InfoList));

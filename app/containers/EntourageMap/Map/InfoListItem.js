@@ -14,7 +14,7 @@ const styles = {
     fontWeight: 200,
     padding: 10,
     fontSize: 14,
-    backgroundColor: selected ? '#CECECE' : index % 2 === 0 ? '#F3F3F3' : '#FFFFFF',
+    backgroundColor: selected ? '#CECECE' : 'inherit',
   }),
   title: {
     fontSize: 'medium',
@@ -43,18 +43,20 @@ const InfoListItem = ({ marker, isClicked, isOvered, index, isInBound, ...props 
   const selected = isClicked || isOvered;
   return (
     /* eslint jsx-a11y/mouse-events-have-key-events: 0 */
-    <div
-      style={styles.main(index, selected)}
-      onMouseOver={() => props.setOveredPointId(marker.id)}
-      onClick={() => props.setClickedPointId(marker.id)}
-      role="link"
-    >
-      <h2 style={styles.title}>{marker.title}</h2>
+    <tr><td>
+      <div
+        style={styles.main(index, selected)}
+        onMouseOver={() => props.setOveredPointId(marker.id)}
+        onClick={() => props.setClickedPointId(marker.id)}
+        role="link"
+      >
+        <h2 style={styles.title}>{marker.title}</h2>
 
-      <div style={styles.from}>
-        Par <span style={styles.name}>{marker.first_name}</span>, le {formatDate(marker.created_at)}
+        <div style={styles.from}>
+          Par <span style={styles.name}>{marker.first_name}</span>, le {formatDate(marker.created_at)}
+        </div>
       </div>
-    </div>
+    </td></tr>
   );
 };
 
