@@ -28,8 +28,14 @@ const styles = {
     paddingTop: 6,
     paddingLeft: 4,
     border: 0,
+    transition: '0.3s ease',
     '&:focus': {
       outline: 0,
+    },
+    '@media (min-width: 1024px)': {
+      '&:focus': {
+        minWidth: 280,
+      },
     },
   },
   iconContainer: {
@@ -38,6 +44,13 @@ const styles = {
   },
 };
 
+const globalStyle = `
+  .pac-container {
+    box-shadow: none !important;
+    border: 1px solid rgb(197, 197, 197) !important;
+  }
+`;
+
 const handleRef = (c, props, map) => {
   if (!c || !map) {
     return;
@@ -45,6 +58,7 @@ const handleRef = (c, props, map) => {
   const searchBox = new window.google.maps.places.SearchBox(c, {
     types: ['geocode'],
   });
+  searchBox.bindTo('bounds', map);
   searchBox.addListener('places_changed', () => {
     const places = searchBox.getPlaces();
     if (places.length > 0) {
@@ -54,18 +68,30 @@ const handleRef = (c, props, map) => {
   });
 };
 
-const SearchBox = ({ classes, map, ...props }) => (
-  <div className={classes.box}>
-    <SearchIcon className={classes.iconContainer} color="#c5c5c5" size={20} />
-    <input
-      ref={(c) => handleRef(c, props, map)}
-      placeholder="Cherchez un lieu..."
-      type="text"
-      className={classes.input}
-    />
-  </div>
-  );
+class SearchBox extends React.Component {
 
+  state = {
+    focus: false,
+  }
+  render() {
+    const { classes, map, ...props } = this.props;
+    const { focus } = this.state;
+    return (
+      <div className={classes.box}>
+        <style>{globalStyle}</style>
+        <SearchIcon className={classes.iconContainer} color="#c5c5c5" size={20} />
+        <input
+          ref={(c) => handleRef(c, props, map)}
+          placeholder="Cherchez un lieu..."
+          type="text"
+          className={classes.input}
+          onBlur={() => this.setState({ focus: false })}
+          onFocus={() => this.setState({ focus: true })}
+        />
+      </div>
+    );
+  }
+}
 SearchBox.propTypes = {
   classes: PropTypes.object.isRequired,
   map: PropTypes.object,
