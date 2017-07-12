@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
 import { minBy, maxBy, random } from 'lodash';
+require('date-utils');
 /**
  * Direct selector to the entourageMap state domain
  */
@@ -12,15 +13,15 @@ const getDataPoints = (state) => state.get('entourageMap').dataPoints;
 export const getMarkers = createSelector(
   [getDataPoints],
   (dataPoints) => {
-    const markers = Object.values(dataPoints);
-    const lowestTsObj = minBy(markers, (o) => new Date(o.created_at)) || {};
-    const highestTsObj = maxBy(markers, (o) => new Date(o.created_at)) || {};
-    const lowestTs = new Date(lowestTsObj.created_at);
-    const highestTs = new Date(highestTsObj.created_at);
+    const markers = Object.values(dataPoints).map((o) => ({ ...o, createDateJS: new Date(o.created_at.substring(0, 10)) }));
+    const lowestTsObj = minBy(markers, (o) => o.createDateJS) || {};
+    const highestTsObj = maxBy(markers, (o) => o.createDateJS) || {};
+    const lowestTs = new Date(lowestTsObj.createDateJS || 0);
+    const highestTs = new Date(highestTsObj.createDateJS || 0);
     return markers.map((marker) => ({
       ...marker,
       // Get a color with green between 100 and 160 (gives orange for old ts and red for fresh ones)
-      color: `rgb(239, ${Math.round(160 - (((new Date(marker.created_at) - lowestTs) / (highestTs - lowestTs)) * 60))}, 47)`,
+      color: `rgb(239, ${Math.round(160 - (((new Date(marker.createDateJS) - lowestTs) / (highestTs - lowestTs)) * 60))}, 47)`,
     }));
   }
 );

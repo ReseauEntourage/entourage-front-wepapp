@@ -53,7 +53,7 @@ const InfoListItem = ({ marker, isClicked, isOvered, index, isInBound, ...props 
         <h2 style={styles.title}>{marker.title}</h2>
 
         <div style={styles.from}>
-          Par <span style={styles.name}>{marker.first_name}</span>, le {formatDate(marker.created_at)}
+          Par <span style={styles.name}>{marker.first_name}</span>, le {formatDate(marker.createDateJS)}
         </div>
       </div>
     </td></tr>

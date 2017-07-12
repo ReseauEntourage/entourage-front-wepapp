@@ -53,7 +53,7 @@ const formatDate = (date) => {
   return `${dateObj.getUTCDate()}/${dateObj.getUTCMonth() + 1}/${dateObj.getUTCFullYear()}`; // months from 1-12
 };
 
-const ClickedBox = ({ title, description, first_name, created_at }) => (
+const ClickedBox = ({ title, description, first_name, createDateJS }) => (
   <div>
     <h2 style={styles.title}>{title}</h2>
     <div style={styles.description}>{description}</div>
@@ -64,7 +64,7 @@ const ClickedBox = ({ title, description, first_name, created_at }) => (
       </a>
     </div>
     <div style={styles.from}>
-      Par <span style={styles.name}>{first_name}</span>, le {formatDate(created_at)}
+      Par <span style={styles.name}>{first_name}</span>, le {formatDate(createDateJS)}
     </div>
   </div>
 );
