@@ -7,6 +7,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Marker as GoogleMarker } from 'react-google-maps';
 import { Animate } from 'react-move';
+import { random } from 'lodash';
 import { setOveredPointId, setClickedPointId } from '../actions';
 import { makeSelectIsOvered, makeSelectIsClicked } from '../selectors';
 import InfoBox from './InfoBox';
@@ -14,12 +15,11 @@ import InfoBox from './InfoBox';
 /* eslint no-plusplus: 0, no-mixed-operators: 0, no-param-reassign: 0 */
 const easingFunc = (t, s = 5) => --t * t * ((s + 1) * t + s) + 1;
 
-const Marker = ({ id, isOvered, isClicked, ...props }) => {
+const Marker = ({ id, isOvered, isClicked, color, ...props }) => {
   const isFocus = isOvered || isClicked;
-
   return (
     <Animate
-      data={{ iconSize: isFocus ? 50 : 30 }}
+      data={{ iconSize: isFocus ? 50 : random(25, 30) }}
       duration={500}
       easing={easingFunc}
     >
@@ -30,16 +30,13 @@ const Marker = ({ id, isOvered, isClicked, ...props }) => {
           position={props.position}
           icon={{
             anchor: new window.google.maps.Point(data.iconSize / 2, data.iconSize / 2),
-            url: 'data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 29.6" >'
-                    + '<path fill="#EF662F" d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0 '
+            url: `${'data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 29.6" >'
+                    + '<path fill="'}${color}" d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0 `
                     + 'C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>'
                     + '</svg>',
-              // url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Heart_corazón.svg/169px-Heart_corazón.svg.png',
-              // size: new google.maps.Size(30, 30),
             scaledSize: new window.google.maps.Size(data.iconSize, data.iconSize),
-              // origin: new google.maps.Point(0,0)
           }}
-          options={{ optimized: false }}
+          options={{ optimized: false, zIndex: isFocus ? 10 : 9 }}
           key={id}
           onMouseOver={() => props.setOveredPointId(id)}
           onMouseOut={() => props.setOveredPointId(null)}

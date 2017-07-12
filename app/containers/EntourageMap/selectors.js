@@ -1,12 +1,30 @@
 import { createSelector } from 'reselect';
-
+import { minBy, maxBy, random } from 'lodash';
 /**
  * Direct selector to the entourageMap state domain
  */
 const isOveredPointId = (state, props) => state.get('entourageMap').overedPointId === props.id;
 const isClickedPointId = (state, props) => state.get('entourageMap').clickedPointId === props.id;
 const isMarkerInCurrentMapBound = (state, props) => !getBounds(state) || getBounds(state).contains(props.position);
-const getMarkers = (state) => state.get('entourageMap').dataPoints;
+
+const getDataPoints = (state) => state.get('entourageMap').dataPoints;
+
+export const getMarkers = createSelector(
+  [getDataPoints],
+  (dataPoints) => {
+    const markers = Object.values(dataPoints);
+    const lowestTsObj = minBy(markers, (o) => new Date(o.created_at)) || {};
+    const highestTsObj = maxBy(markers, (o) => new Date(o.created_at)) || {};
+    const lowestTs = new Date(lowestTsObj.created_at);
+    const highestTs = new Date(highestTsObj.created_at);
+    return markers.map((marker) => ({
+      ...marker,
+      // Get a color with green between 100 and 160 (gives orange for old ts and red for fresh ones)
+      color: `rgb(239, ${Math.round(160 - (((new Date(marker.created_at) - lowestTs) / (highestTs - lowestTs)) * 60))}, 47)`,
+    }));
+  }
+);
+
 const getFilter = (state) => state.get('entourageMap').filter;
 const getBounds = (state) => state.get('entourageMap').mapBounds;
 
@@ -41,7 +59,7 @@ export const makeSelectMarkerIsInBound = () => createSelector(
 );
 export const makeSelectMarkers = createSelector(
   [getMarkers, getFilter],
-  (markers, filter) => Object.values(markers)
+  (markers, filter) => markers
     .filter((marker) => (
       filter.trim() === ''
       || marker.first_name.toLowerCase().includes(filter.toLowerCase())

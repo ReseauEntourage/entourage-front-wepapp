@@ -50,7 +50,7 @@ const styles = {
 
 const formatDate = (date) => {
   const dateObj = new Date(date);
-  return `${dateObj.getUTCDate()}/${dateObj.getUTCMonth() + 1}`; // months from 1-12
+  return `${dateObj.getUTCDate()}/${dateObj.getUTCMonth() + 1}/${dateObj.getUTCFullYear()}`; // months from 1-12
 };
 
 const ClickedBox = ({ title, description, first_name, created_at }) => (
