@@ -3,18 +3,17 @@ import { createSelector } from 'reselect';
 /**
  * Direct selector to the entourageMap state domain
  */
-export const selectEntourageMapDomain = (state) => state.get('entourageMap');
-const selectDataPoints = (state) => state.get('entourageMap').dataPoints;
-
 const isOveredPointId = (state, props) => state.get('entourageMap').overedPointId === props.id;
 const isClickedPointId = (state, props) => state.get('entourageMap').clickedPointId === props.id;
 const isMarkerInCurrentMapBound = (state, props) => !getBounds(state) || getBounds(state).contains(props.position);
-
-export const getOveredPointId = (state) => state.get('entourageMap').overedPointId;
-export const getMapCenter = (state) => state.get('entourageMap').mapCenter;
 const getMarkers = (state) => state.get('entourageMap').dataPoints;
 const getFilter = (state) => state.get('entourageMap').filter;
 const getBounds = (state) => state.get('entourageMap').mapBounds;
+
+export const selectEntourageMapDomain = (state) => state.get('entourageMap');
+export const getOveredPointId = (state) => state.get('entourageMap').overedPointId;
+export const getMapCenter = (state) => state.get('entourageMap').mapCenter;
+export const getMapZoom = (state) => state.get('entourageMap').mapZoom;
 
 /**
  * Other specific selectors

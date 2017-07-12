@@ -11,6 +11,8 @@ import {
   SET_MAP_BOUNDS,
   SET_MAP_CENTER,
   SET_FILTER,
+  INCREMENT_MAP_ZOOM,
+  SET_MAP_ZOOM,
 } from './constants';
 
 export const setDataAction = (data) => ({
@@ -36,4 +38,12 @@ export const setMapCenter = (position) => ({
 export const setFilter = (filter) => ({
   type: SET_FILTER,
   payload: filter,
+});
+export const incrementMapZoom = (increment) => ({
+  type: INCREMENT_MAP_ZOOM,
+  payload: increment,
+});
+export const setMapZoom = (zoom) => ({
+  type: SET_MAP_ZOOM,
+  payload: zoom,
 });

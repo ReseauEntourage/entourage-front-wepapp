@@ -11,6 +11,8 @@ import {
   SET_MAP_BOUNDS,
   SET_MAP_CENTER,
   SET_FILTER,
+  INCREMENT_MAP_ZOOM,
+  SET_MAP_ZOOM,
 } from './constants';
 
 const initialState = {
@@ -20,6 +22,7 @@ const initialState = {
   mapBounds: null,
   mapCenter: { lat: 48.8547942, lng: 2.3482701 },
   filter: '',
+  mapZoom: 14,
 };
 
 function entourageMapReducer(state = initialState, action) {
@@ -46,6 +49,10 @@ function entourageMapReducer(state = initialState, action) {
       return { ...state, mapCenter: action.payload };
     case SET_FILTER:
       return { ...state, filter: action.payload };
+    case INCREMENT_MAP_ZOOM:
+      return { ...state, mapZoom: Math.max(5, state.mapZoom + action.payload) };
+    case SET_MAP_ZOOM:
+      return { ...state, mapZoom: action.payload };
     default:
       return state;
   }

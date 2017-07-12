@@ -15,15 +15,15 @@ import Responsive from 'react-responsive';
 import Markers from './Markers';
 import InfoList from './InfoList';
 import TopBar from './TopBar';
-import { setMapBounds, setClickedPointId, setOveredPointId } from '../actions';
-import { getMapCenter } from '../selectors';
+import { setMapBounds, setClickedPointId, setOveredPointId, setMapZoom } from '../actions';
+import { getMapCenter, getMapZoom } from '../selectors';
 
 let AsyncGoogleMap = withScriptjs(
   withGoogleMap(
-    ({ map, onMapLoaded, mapCenterPosition, ...props }) => (
+    ({ map, onMapLoaded, mapCenterPosition, mapZoom, ...props }) => (
       <GoogleMap
         ref={onMapLoaded}
-        defaultZoom={14}
+        zoom={mapZoom}
         center={mapCenterPosition}
         gestureHandling="greedy"
         // Notify list to refresh its content based on current map bounds visible markers
@@ -32,6 +32,7 @@ let AsyncGoogleMap = withScriptjs(
           props.setClickedPointId(null);
           props.setOveredPointId(null);
         }}
+        onZoomChanged={(z) => props.setMapZoom(map.getZoom())}
         defaultOptions={{
           streetViewControl: false,
           mapTypeControl: false,
@@ -46,8 +47,9 @@ let AsyncGoogleMap = withScriptjs(
 AsyncGoogleMap = connect(
   (state) => ({
     mapCenterPosition: getMapCenter(state),
+    mapZoom: getMapZoom(state),
   }),
-  { setMapBounds, setClickedPointId, setOveredPointId }
+  { setMapBounds, setClickedPointId, setOveredPointId, setMapZoom }
 )(AsyncGoogleMap);
 
 

@@ -7,6 +7,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import injectSheet from 'react-jss';
 import { makeSelectMarkers } from '../selectors';
+import { incrementMapZoom } from '../actions';
 import InfoListItem from './InfoListItem';
 import FilterBox from './FilterBox';
 
@@ -25,9 +26,14 @@ const styles = {
       backgroundColor: '#F3F3F3',
     },
   },
+  moreResultLink: {
+    textAlign: 'center',
+    userSelect: 'none',
+    margin: 20,
+  },
 };
 
-const InfoList = ({ style, markers, classes }) => (
+const InfoList = ({ style, markers, classes, incrementMapZoom }) => (
   <div style={{ ...baseStyle, ...style }}>
     <div style={filterBoxStyle}>
       <FilterBox />
@@ -45,6 +51,10 @@ const InfoList = ({ style, markers, classes }) => (
         ))}
       </tbody>
     </table>
+
+    <div className={classes.moreResultLink}>
+      <a href="#" onClick={() => incrementMapZoom(-2)}>cliquez pour afficher plus de résultats</a>
+    </div>
   </div>
   );
 
@@ -57,5 +67,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps,
-  { }
+  { incrementMapZoom }
 )(injectSheet(styles)(InfoList));
