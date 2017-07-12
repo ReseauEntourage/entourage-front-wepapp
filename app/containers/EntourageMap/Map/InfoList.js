@@ -53,7 +53,7 @@ const InfoList = ({ style, markers, classes, incrementMapZoom }) => (
     </table>
 
     <div className={classes.moreResultLink}>
-      <a href="#" onClick={() => incrementMapZoom(-2)}>cliquez pour afficher plus de résultats</a>
+      <a href="#" style={{ color: '#e26822' }} onClick={() => incrementMapZoom(-2)}>Cliquez pour afficher plus de résultats</a>
     </div>
   </div>
   );

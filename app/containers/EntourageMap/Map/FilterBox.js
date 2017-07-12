@@ -22,6 +22,7 @@ const styles = {
     outline: 'none',
     textOverflow: 'ellipses',
     backgroundColor: 'white',
+    margin: 5,
   },
   input: {
     width: 140,
